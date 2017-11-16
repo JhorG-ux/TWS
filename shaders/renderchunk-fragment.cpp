@@ -126,7 +126,7 @@ void main(){
 		lights.g *= 0.65;
 		lights.b *= 0.0;
 		lights.rgb *= 3.0;
-		diffuse *= color*light;
+		diffuse *= color*lights;
 	#endif
 
 	#ifdef FOG
