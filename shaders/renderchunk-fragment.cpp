@@ -49,26 +49,6 @@ uniform sampler2D TEXTURE_2;
 #define gamma 1.100
 #define contrast 1.997
 
-float filmic_curve(float x) {
-
-	// Shoulder strength
-	float A = 0.22;
-	// Linear strength
-	float B = 0.5;
-	// Linear angle
-	float C = 0.15 * brightness;
-	// Toe strength
-	float D = 0.4 * gamma;
-	// Toe numerator
-	float E = 0.01 * contrast;
-	// Toe denominator
-	float F = 0.2;
-
-	return ((x * (A * x + C * B) + D * E) / 
-			(x * (A * x + B) + D * F)) - E / F;
-
-}
-
 
 void main(){
 	//Заглушка
