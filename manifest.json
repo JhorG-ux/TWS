@@ -1,0 +1,17 @@
+{
+   "format_version" : 1,
+   "header" : {
+      "description" : "TeamWorldShaders (TWS) v2.0",
+      "name" : "TWS2",
+      "uuid" : "8d0822c7-1bcb-3793-b1af-7ea45cc35dcf",
+      "version" : [ 2, 0, 0 ]
+   },
+   "modules" : [
+      {
+         "description" : "TeamWorldShaders (TWS) v 2.0",
+         "type" : "resources",
+         "uuid" : "576dd287-d1a4-3e8c-9bf3-214a7f630e0d",
+         "version" : [ 2, 0, 0 ]
+      }
+   ]
+}
