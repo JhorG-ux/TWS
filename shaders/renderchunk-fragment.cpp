@@ -8,7 +8,8 @@
 //#define TORCH_BLINK //Дрожание света от факела
 
 //Тестирование
-#define TEST_UV
+// #define TEST_UV
+#define UsernameAKs_Lights
 
 #include "shaders/fragmentVersionCentroid.h"
 
@@ -117,6 +118,15 @@ void main(){
 		diffuse.rgb *= mix(vec3(1.0,1.0,1.0), texture2D( TEXTURE_2, uv).rgb*2.0, inColor.b);
 		diffuse.rgb *= inColor.aaa;
 		diffuse.a = 1.0;
+	#endif
+
+	#ifdef UsernameAKs_Lights
+		light.rgb *= color.rgb*0.75;
+		light.r *= 1.0;
+		light.g *= 0.65;
+		light.b *= 0.0;
+		light.rgb *= 3.0;
+		diffuse *= color*light;
 	#endif
 
 	#ifdef FOG
