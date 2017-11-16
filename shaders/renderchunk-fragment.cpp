@@ -83,8 +83,7 @@ void main(){
 	#endif
 	
 	#if !defined(ALWAYS_LIT)
-		#ifdef NIGHT_VISION
-		#else
+		#ifndef NIGHT_VISION
 			diffuse = diffuse * lights; //Применяется освещение
 		#endif
 	#endif
