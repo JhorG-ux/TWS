@@ -10,6 +10,9 @@
 //Тестирование
 // #define TEST_UV
 #define UsernameAKs_Lights
+//#define SHADOWS
+//#define DYNAMIC_SHADOWS
+//#define TORCH_PROCESSOR
 
 #include "shaders/fragmentVersionCentroid.h"
 
@@ -53,7 +56,15 @@ uniform sampler2D TEXTURE_2;
 #define gamma 1.100
 #define contrast 1.997
 
-vec4 TorchProcessor(vec4 color){
+vec4 TorchProcessor(vec4 _color, vec4 _light){
+	vec4 color = _color;
+	vec4 light = _light;
+	light.rgb *= color.rgb*0.75;
+	light.r *= 1.0;
+	light.g *= 0.65;
+	light.b *= 0.101;
+	light.rgb *= 3.0;
+	color *= color*light;
 	return color;
 }
 
@@ -96,7 +107,11 @@ void main(){
 			diffuse = diffuse * lights; //Применяется освещение
 		#endif
 	#endif
-
+	
+	#ifdef TORCH_PROCESS
+		diffuse = TorchProcessor(diffuse, lights);
+	#endif
+		
 	#ifndef SEASONS
 
 		#if !defined(ALPHA_TEST) && !defined(BLEND)
@@ -120,15 +135,44 @@ void main(){
 		diffuse.a = 1.0;
 	#endif
 
-	#ifdef UsernameAKs_Lights
+	#ifdef UsernameAKs_Lights	
 		lights.rgb *= color.rgb*0.75;
-		lights.r *= 1.0;
-		lights.g *= 0.65;
+		lights.r *= 0.5;
+		lights.g *= 0.3;
 		lights.b *= 0.0;
-		lights.rgb *= 3.0;
-		diffuse *= color*lights;
+//		lights.rgb *= 1.5;
+		diffuse *= /*color**/lights;
 	#endif
 
+	#ifdef SHADOWS
+		if(diffuse.r > 2.1 && diffuse.g > 2.1 && diffuse.b > 2.1) {
+			//diffuse.r *= 1.05;
+			diffuse.b = 1.0;
+		}
+		if(diffuse.b > 0.2) {
+			diffuse.a = 0.008;
+		}
+		
+		if(uv1.y < 0.9068) {
+		    diffuse.r = 1.0;// *= 0.7*1.0+ uv1.x *0.7857; //0.66
+		    //diffuse.g *= 0.7*1.0+ uv1.x *0.6428; //0.653
+	    	//diffuse.b *= 0.8*1.0+ uv1.x *0.3076; //0.65 //0.397
+		} else {
+		    //diffuse.r *= 1.5*1.0;
+		    diffuse.g =1.0;//*= 1.4*1.0;
+		   // diffuse.b *= 1.1*1.0;
+		}
+	#endif
+	
+	#ifdef DYNAMIC_SHADOWS
+		vec4 cf = color;
+		if(cf.r < 0.655*sin(TIME/125.0-10.0)+0.76 && cf.g < 0.655*sin(TIME/125.0-10.0)+0.76 && cf.b < 0.655*sin(TIME/125.0-10.0)+0.76){//84-30
+		    diffuse.r *= 0.6+ uv1.x *0.7857-0.1;//0.64
+		    diffuse.g *= 0.6+ uv1.x *0.6428-0.1;//0.613
+	    	diffuse.b *= 0.9+ uv1.x *0.0576-0.2;//0.13
+		}
+	#endif
+	
 	#ifdef FOG
 		diffuse.rgb = mix( diffuse.rgb, fogColor.rgb, fogColor.a );
 	#endif
