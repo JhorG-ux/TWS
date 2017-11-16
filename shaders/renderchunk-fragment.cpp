@@ -1,8 +1,14 @@
 // __multiversion__
 // This signals the loading code to prepend either #version 100 or #version 300 es as apropriate.
 
+
+//Конфигурация
+//#define NIGHT_VISION //Ночное зрение
+//#define COLOR_FILTER //Цветовой фильтр
+//#define TORCH_BLINK //Дрожание света от факела
+
 #include "shaders/fragmentVersionCentroid.h"
-// ????????
+
 #if __VERSION__ >= 300
 	#ifndef BYPASS_PIXEL_SHADER
 		#if defined(TEXEL_AA) && defined(TEXEL_AA_FEATURE)
@@ -19,10 +25,6 @@
 		varying vec2 uv1;
 	#endif
 #endif
-
-//Конфигурация
-#define NIGHT_VISION //Отключить тени
-
 
 varying vec4 color;
 
