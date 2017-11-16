@@ -120,19 +120,3 @@ void main(){
 
 #endif // BYPASS_PIXEL_SHADER
 }
-
-
-/*
-// Отсеивание
-// Реагирует на края лавы и воды
-if(uv1.y < 0.875){s_amount = 0.05;}
-if(uv1.y < 0.874){s_amount = 0.10;}
-if(uv1.y < 0.873){s_amount = 0.15;}
-if(uv1.y < 0.872){s_amount = 0.20;}
-if(uv1.y < 0.871){s_amount = 0.25;}
-if(uv1.y < 0.870){s_amount = 0.30;}
-if(uv1.y < 0.869){s_amount = 0.35;}
-if(uv1.y < 0.868){s_amount = 0.40;}
-if(uv1.y < 0.867){s_amount = 0.45;}
-
-*/
