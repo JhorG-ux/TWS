@@ -7,6 +7,9 @@
 //#define COLOR_FILTER //Цветовой фильтр
 //#define TORCH_BLINK //Дрожание света от факела
 
+//Тестирование
+#define TEST_UV
+
 #include "shaders/fragmentVersionCentroid.h"
 
 #if __VERSION__ >= 300
@@ -29,11 +32,11 @@
 varying vec4 color;
 
 #ifdef FOG
-varying vec4 fogColor;
+	varying vec4 fogColor;
 #endif
 
 #ifdef NEAR_WATER
-varying float cameraDist;
+	varying float cameraDist;
 #endif
 
 #include "shaders/uniformShaderConstants.h"
@@ -49,20 +52,25 @@ uniform sampler2D TEXTURE_2;
 #define gamma 1.100
 #define contrast 1.997
 
+vec4 TorchProcessor(vec4 color){
+	return color;
+}
 
 void main(){
 	//Заглушка
-#ifdef BYPASS_PIXEL_SHADER
-	gl_FragColor = vec4(0, 0, 0, 0);
-	return;
-#else 
+	#ifdef BYPASS_PIXEL_SHADER
+		gl_FragColor = vec4(0, 0, 0, 0);
+		return;
+	#else 
+
+	vec4 diffuse, lights;
 
 	#if !defined(TEXEL_AA) || !defined(TEXEL_AA_FEATURE)
-		vec4 diffuse = texture2D( TEXTURE_0, uv0 );
-		vec4 lights  = texture2D( TEXTURE_1, uv1 );
+		diffuse = texture2D( TEXTURE_0, uv0 );
+		lights  = texture2D( TEXTURE_1, uv1 );
 	#else
-		vec4 diffuse = texture2D_AA(TEXTURE_0, uv0 );
-		vec4 lights  = texture2D( TEXTURE_1, uv1 );
+		diffuse = texture2D_AA(TEXTURE_0, uv0 );
+		lights  = texture2D( TEXTURE_1, uv1 );
 	#endif
 
 	vec4 inColor = color;
@@ -118,5 +126,5 @@ void main(){
 	
 	gl_FragColor = diffuse;
 
-#endif // BYPASS_PIXEL_SHADER
+	#endif // BYPASS_PIXEL_SHADER
 }
