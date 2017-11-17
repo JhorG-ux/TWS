@@ -8,7 +8,7 @@
 //#define TORCH_BLINK //Дрожание света от факела
 
 //Тестирование
-// #define TEST_UV
+//#define TEST_UV
 #define UsernameAKs_Lights
 //#define SHADOWS
 //#define DYNAMIC_SHADOWS
@@ -46,9 +46,9 @@ varying vec4 color;
 #include "shaders/uniformShaderConstants.h"
 #include "shaders/util.h"
 
-uniform sampler2D TEXTURE_0;
-uniform sampler2D TEXTURE_1;
-uniform sampler2D TEXTURE_2;
+uniform sampler2D TEXTURE_0; //Textures
+uniform sampler2D TEXTURE_1; //Lightmap
+uniform sampler2D TEXTURE_2; //Shadows
 
 #define saturation 1.510
 #define exposure 1.1
@@ -145,7 +145,7 @@ void main(){
 	#endif
 
 	#ifdef SHADOWS
-		if(diffuse.r > 2.1 && diffuse.g > 2.1 && diffuse.b > 2.1) {
+		/*if(diffuse.r > 2.1 && diffuse.g > 2.1 && diffuse.b > 2.1) {
 			//diffuse.r *= 1.05;
 			diffuse.b = 1.0;
 		}
@@ -161,12 +161,16 @@ void main(){
 		    //diffuse.r *= 1.5*1.0;
 		    diffuse.g =1.0;//*= 1.4*1.0;
 		   // diffuse.b *= 1.1*1.0;
-		}
+		}*/
+		diffuse.rgb *= -vec3(texture2D( TEXTURE_2, inColor.xy).g) + 1.0;
 	#endif
 	
 	#ifdef DYNAMIC_SHADOWS
 		vec4 cf = color;
-		if(cf.r < 0.655*sin(TIME/125.0-10.0)+0.76 && cf.g < 0.655*sin(TIME/125.0-10.0)+0.76 && cf.b < 0.655*sin(TIME/125.0-10.0)+0.76){//84-30
+		if(cf.r < (0.655 * sin( TIME / 125.0 - 10.0 ) + 0.76)
+			&& cf.g < (0.655 * sin( TIME / 125.0 - 10.0 ) + 0.76)
+			&& cf.b < (0.655 * sin( TIME / 125.0 - 10.0 ) + 0.76)
+		){//84-30
 		    diffuse.r *= 0.6+ uv1.x *0.7857-0.1;//0.64
 		    diffuse.g *= 0.6+ uv1.x *0.6428-0.1;//0.613
 	    	diffuse.b *= 0.9+ uv1.x *0.0576-0.2;//0.13
@@ -177,7 +181,13 @@ void main(){
 		diffuse.rgb = mix( diffuse.rgb, fogColor.rgb, fogColor.a );
 	#endif
 	
-	
+	#ifdef TEST_UV
+/*		diffuse.r = uv1.x;
+		diffuse.b = uv1.y;
+		diffuse.g = 0.0;
+		diffuse.a = 1.0;*/
+		diffuse = texture2D( TEXTURE_2, inColor.xy);
+	#endif
 	gl_FragColor = diffuse;
 
 	#endif // BYPASS_PIXEL_SHADER
