@@ -35,6 +35,8 @@
 	varying float cameraDist;
 #endif
 
+varying vec3 fogPos;
+
 #include "shaders/uniformWorldConstants.h"
 #include "shaders/uniformPerFrameConstants.h"
 #include "shaders/uniformShaderConstants.h"
@@ -52,11 +54,13 @@ const float DIST_DESATURATION = 56.0 / 255.0;
 //WARNING this value is also hardcoded in the water color, don'tchange
 
 void main() {
-    POS4 worldPos;
+	POS4 worldPos;
 	#ifdef AS_ENTITY_RENDERER
+		vec4 fogPos4 = WORLD * POSITION;
 		POS4 pos = WORLDVIEWPROJ * POSITION;
 		worldPos = pos;
 	#else
+		vec4 fogPos4;
 		worldPos.xyz = (POSITION.xyz * CHUNK_ORIGIN_AND_SCALE.w) + CHUNK_ORIGIN_AND_SCALE.xyz;
 		worldPos.w = 1.0;
 
@@ -65,7 +69,10 @@ void main() {
 		// World position here is calculated above and can get huge
 		POS4 pos = WORLDVIEW * worldPos;
 		pos = PROJ * pos;
+		fogPos4 = worldPos;
 	#endif
+
+	fogPos = fogPos4.xyz / fogPos4.w;
 
 	#ifndef BYPASS_PIXEL_SHADER
 		uv0 = TEXCOORD_0;
@@ -140,7 +147,7 @@ void main() {
 			vec4 surfColor = vec4(color.rgb, 1.0);
 			
 			// Волны на воде
-			pos.y += sin(TIME * WaterWavesSpeed + 3.0*POSITION.x+POSITION.y+POSITION.z) * 0.05;
+			pos.y += sin(TIME * WaterWavesSpeed + 3.0*fogPos.x+fogPos.y+fogPos.z) * 0.05;
 
 			vec4 nearColor = mix(traspColor, depthColor, color.a);
 			color = mix(surfColor, nearColor, F);
