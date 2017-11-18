@@ -181,7 +181,7 @@ void main(){
 		diffuse.b = uv1.y;
 		diffuse.g = 0.0;
 		diffuse.a = 1.0;*/
-		diffuse = texture2D( TEXTURE_2, inColor.xy);
+		diffuse *= texture2D( TEXTURE_1, uv1) * 2.0;
 	#endif
 	
 	#ifdef TEST_TEXTURE_MAPS
