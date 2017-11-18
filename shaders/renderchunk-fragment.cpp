@@ -8,12 +8,12 @@
 //#define TORCH_BLINK //Дрожание света от факела
 
 //Тестирование
-#define TEST_TEXTURE_MAPS
+//#define TEST_TEXTURE_MAPS // Классная графика. Вкл - лайтмэп Выкл - шадоумэп
 //#define TEST_UV
 #define UsernameAKs_Lights
-//#define SHADOWS
-//#define DYNAMIC_SHADOWS
-//#define TORCH_PROCESSOR
+//#define SHADOWS //Статические тени из шадоумэпа
+//#define DYNAMIC_SHADOWS //Динамические тени
+//#define TORCH_PROCESSOR //Модификация факелов
 
 #include "shaders/fragmentVersionCentroid.h"
 
@@ -49,13 +49,7 @@ varying vec4 color;
 
 uniform sampler2D TEXTURE_0; //Textures
 uniform sampler2D TEXTURE_1; //Lightmap
-uniform sampler2D TEXTURE_2; //Shadows
-
-#define saturation 1.510
-#define exposure 1.1
-#define brightness 0.600
-#define gamma 1.100
-#define contrast 1.997
+uniform sampler2D TEXTURE_2; //Shadowmap
 
 vec4 TorchProcessor(vec4 _color, vec4 _light){
 	vec4 color = _color;
@@ -142,7 +136,7 @@ void main(){
 		lights.g *= 0.3;
 		lights.b *= 0.0;
 //		lights.rgb *= 1.5;
-		diffuse *= /*color**/lights;
+		diffuse *= color*lights;
 	#endif
 
 	#ifdef SHADOWS

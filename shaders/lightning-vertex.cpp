@@ -18,8 +18,8 @@ void main()
 {
 	vec4 pos = POSITION;
 	#ifdef LIGHTNING_WAVES
-		pos.x += sin(TIME * 20.0 + pos.y / 2.0) * 0.9;
-		pos.z += sin(TIME * 22.0 + pos.y / 3.0) * 0.9;
+		pos.x += sin(TIME * 20.0 + pos.y / 2.0) * 0.9; //X waves
+		pos.z += sin(TIME * 22.0 + pos.y / 3.0) * 0.9; //Z waves
 	#endif
     gl_Position = WORLDVIEWPROJ * pos;
 

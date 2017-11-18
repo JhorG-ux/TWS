@@ -3,14 +3,14 @@
    "header" : {
       "description" : "TeamWorldShaders (TWS) v2.0",
       "name" : "TWS2",
-      "uuid" : "8d0822c7-1bcb-3793-b1af-7ea45cc35dcf",
+      "uuid" : "024f12b2-5bf7-4fd1-9d0b-fe8b47baadfa",
       "version" : [ 2, 0, 0 ]
    },
    "modules" : [
       {
          "description" : "TeamWorldShaders (TWS) v 2.0",
          "type" : "resources",
-         "uuid" : "576dd287-d1a4-3e8c-9bf3-214a7f630e0d",
+         "uuid" : "21985e9d-f86d-4e8c-a724-4018e5a7e15b",
          "version" : [ 2, 0, 0 ]
       }
    ]

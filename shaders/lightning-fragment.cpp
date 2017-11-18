@@ -12,8 +12,8 @@ void main()
 {
 	vec4 c = color;
 	#ifdef LIGHTNING_CORRECTION
-		c.rg *= 0.5;
-		c.a *= (sin(TIME * 20.0) + 1.75) * 0.9; //Lightning color correction
+		c.rg *= 0.5; //Lightning color correction
+		c.a *= (sin(TIME * 20.0) + 1.75) * 0.9; //Lightning smooth gradient
 	#endif
 	gl_FragColor = c;
 }
