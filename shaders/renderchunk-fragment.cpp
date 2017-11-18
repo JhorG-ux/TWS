@@ -8,6 +8,7 @@
 //#define TORCH_BLINK //Дрожание света от факела
 
 //Тестирование
+#define TEST_TEXTURE_MAPS
 //#define TEST_UV
 #define UsernameAKs_Lights
 //#define SHADOWS
@@ -187,6 +188,14 @@ void main(){
 		diffuse.g = 0.0;
 		diffuse.a = 1.0;*/
 		diffuse = texture2D( TEXTURE_2, inColor.xy);
+	#endif
+	
+	#ifdef TEST_TEXTURE_MAPS
+		#ifdef FANCY //Включена Классная графика в настройках
+			diffuse = texture2D( TEXTURE_1, uv1 ); //Light map
+		#else
+			diffuse = texture2D( TEXTURE_2, inColor.xy); //Shadow map
+		#endif
 	#endif
 	gl_FragColor = diffuse;
 
