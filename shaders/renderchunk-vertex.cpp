@@ -8,7 +8,7 @@
 
 #define PlantWavesSpeed 0.783
 #define WaterWavesSpeed 2.0
-#define UnderWaterSpeed 1.5
+#define UnderWaterSpeed 1.0//1.5
 
 #include "shaders/vertexVersionCentroid.h"
 #if __VERSION__ >= 300
@@ -111,9 +111,8 @@ void main() {
 		
 		#ifdef UNDER_WATER
 		if(FOG_CONTROL.x < 0.1 && FOG_CONTROL.y < 20.0){
-			float range = 0.035 + cameraDepth / 1000.0; //Больше реалистичности!
-			//float range = 0.035; //Меньше реалистичности)
-			vec3 waves = sin(POSITION.xyz * 20.0 + TIME * UnderWaterSpeed)  * cos(POSITION.y * 20.0 + TIME * UnderWaterSpeed) * range;  //Скорость: 6.0(или в конфиге)
+			float range = 0.035;// + cameraDepth / 1000.0;
+			vec3 waves = sin(POSITION.xyz * 10.0 + TIME * UnderWaterSpeed)  * cos(POSITION.y * 10.0 + TIME * UnderWaterSpeed) * range;  //Скорость: 6.0(или в конфиге)
 			pos.xyz += waves;
 			fogColor.a = 0.5; //0.8 //Мутность воды =)
 		}
