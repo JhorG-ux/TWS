@@ -192,12 +192,12 @@ void main(){
 		diffuse.b = uv1.y;
 		diffuse.g = 0.0;
 		diffuse.a = 1.0;*/
-		vec4 lightmap = texture2D( TEXTURE_1, uv1);
+		//vec4 lightmap = texture2D( TEXTURE_1, uv1);
 		//float tmplmmultipler = pow(tmplightmap.r, 2)
 		//diffuse = tmplightmap * pow(tmplightmap.r, 2.0);//texture2D( TEXTURE_0, uv0) * tmplightmap * vec4(tmplmmultipler,1.0);
 		//diffuse = lightmap * ( 1.0 / ( pow( 2.7182, -5.0 * lightmap.r ) + 1.0 ) );
 		//diffuse.rgb = vec3(lightmap.r);//lightmap * porog(lightmap.r, 0.9);
-		diffuse = lightmap * color;
+		diffuse = inColor;
 	#endif
 	
 	#ifdef TEST_TEXTURE_MAPS
