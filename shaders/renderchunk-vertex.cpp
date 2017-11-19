@@ -68,6 +68,11 @@ float rnd(float x, float z, float seed){
 	return v / 10000.0;
 }
 */
+/*
+float noisegen(float x){
+	return fract(sin(x)*0.8+0.5);
+}
+*/
 void main() {
 	POS4 worldPos;
 	#ifdef AS_ENTITY_RENDERER
