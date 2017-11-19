@@ -54,7 +54,7 @@
 
 		"vertexShader" : "shaders/color.vertex",
 		"vrGeometryShader" :  "shaders/color.geometry",
-		"fragmentShader" : "shaders/stars.fragment",
+		"fragmentShader" : "shaders/stars-fragment.cpp",
     "vertexFields": [
       { "field": "Position" },
       { "field": "Color" }
