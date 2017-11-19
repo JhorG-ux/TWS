@@ -55,18 +55,19 @@ const float DIST_DESATURATION = 56.0 / 255.0;
 
 
 //random
+/*
 float rnd(float x, float z, float seed){
-	float out = mod(x * 1372.0 + z * 1227.0 + seed * 1293.0, 10000.0);
-	out = mod(mod(out * 1526.0 + 6285.0, 10000.0) * 5336.0 + 5637.0, 10000.0);
-	if(mod(out, 2.0) == 1.0){
-		out = mod(out * 5383.0 + 5732.0, 10000.0);
+	float v = mod(x * 1372.0 + z * 1227.0 + seed * 1293.0, 10000.0);
+	v = mod(mod(v * 1526.0 + 6285.0, 10000.0) * 5336.0 + 5637.0, 10000.0);
+	if(mod(v, 2.0) == 1.0){
+		v = mod(v * 5383.0 + 5732.0, 10000.0);
 	}
-	if(mod(out, 2.0) == 0.0){
-		out = mod(out * 5763.0 + 3232.0, 10000.0);
+	if(mod(v, 2.0) == 0.0){
+		v = mod(v * 5763.0 + 3232.0, 10000.0);
 	}
-	return out / 10000.0;
+	return v / 10000.0;
 }
-
+*/
 void main() {
 	POS4 worldPos;
 	#ifdef AS_ENTITY_RENDERER

@@ -16,7 +16,7 @@ void main()
 	vec4 pos = POSITION;
 	#ifdef SHADOWS_MOD
 		float shadows = abs( sin( TIME / 250.0 - 10.0 ) + 0.76 );
-
+		//Длина тени зависит от времени... Жаль, что не времени мира...
 		pos.y += shadows / 2.0;
 		pos.y *= shadows * 2.0;
 		pos.z += shadows / 2.0;
