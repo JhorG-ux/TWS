@@ -5,7 +5,7 @@
 #define UNDER_WATER
 #define WATER_WAVES
 #define PLANT_WAVES
-#define ADVANCED_PLANT_FILTER
+//#define ADVANCED_PLANT_FILTER
 
 //Тестирование
 //#define TEST
@@ -148,7 +148,8 @@ void main() {
 				}else if(index == 180.0 || index == 181.0){
 					//Ничего
 					power = 0.75;
-				}/*else if(index == 262.0 || index == 263.0){
+				}else if(index == 262.0 || index == 263.0){
+					//Пшеница 3 и 4 стадии
 					power = 0.45;
 				}else if(index >= 64.0 && index <= 96.0 || index >= 133.0 && index < 137.0 || index >= 206.0 && index <= 213.0 || index >= 224.0 && index <= 226.0){
 					power = 1.0;
@@ -165,7 +166,7 @@ void main() {
 					}
 				}else if(index == 175.0){
 					power = 0.3;
-				}*/
+				}
 				/*switch(index){
 					default:
 						float power = 0.05;
