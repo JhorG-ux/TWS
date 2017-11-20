@@ -12,7 +12,7 @@
 
 #define PlantWavesSpeed 0.9 //0.783
 #define WaterWavesSpeed 2.0
-#define UnderWaterSpeed 1.0//1.5
+#define UnderWaterSpeed 1.0 //1.5
 
 #include "shaders/vertexVersionCentroid.h"
 #if __VERSION__ >= 300
@@ -61,6 +61,14 @@ const vec3 UNIT_Y = vec3(0,1,0);
 const float DIST_DESATURATION = 56.0 / 255.0;
 //WARNING this value is also hardcoded in the water color, don'tchange
 
+//detectors
+bool isNether(vec4 fog){
+	if(fog.r < .5 && fog.b < .2 && fog.r > fog.b){ //TODO: to inline return 
+		return true;
+	}else{
+		return false;
+	}
+}
 
 //random
 /*
