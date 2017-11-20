@@ -8,7 +8,7 @@
 //#define TORCH_BLINK //Дрожание света от факела
 
 //Тестирование
-#define TEST_TEXTURE_MAPS // Классная графика. Вкл - лайтмэп Выкл - шадоумэп
+//#define TEST_TEXTURE_MAPS // Классная графика. Вкл - лайтмэп Выкл - шадоумэп
 //#define TEST_UV
 //#define UsernameAKs_Lights
 //#define UsernameAKs_Water
@@ -114,6 +114,26 @@ void main(){
 		lights.b *= 0.0;
 //		lights.rgb *= 1.5;
 		diffuse *= inColor*lights;
+	#endif
+	
+	#ifdef LIGHTS
+		if(lights.b > lights.r && lights.b > lights.g && lights.r < .5){ //Night
+		//FIXME: режет
+			/*lights.r *= 1.;
+			lights.g *= .75;
+			lights.b *= .01;*/
+			lights.b *= 1.18;
+			lights.r *= 1.16;
+			lights.g *= 1.17;
+		}/*else if(lights.b == lights.r){ //Noon
+			lights.r *= 1.;
+			lights.g *= .9;
+			lights.b *= .5;
+		}*/else{ //light sources
+			lights.r *= 1.;
+			lights.g *= .7;
+			lights.b *= .01;
+		}
 	#endif
 	
 	#ifdef NEAR_WATER
