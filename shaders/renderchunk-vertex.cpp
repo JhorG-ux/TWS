@@ -5,8 +5,12 @@
 #define UNDER_WATER
 #define WATER_WAVES
 #define PLANT_WAVES
+//#define ADVANCED_PLANT_FILTER
 
-#define PlantWavesSpeed 0.783
+//Тестирование
+//#define TEST
+
+#define PlantWavesSpeed 0.9 //0.783
 #define WaterWavesSpeed 2.0
 #define UnderWaterSpeed 1.0//1.5
 
@@ -41,6 +45,10 @@ varying vec3 fogPos;
 #include "shaders/uniformPerFrameConstants.h"
 #include "shaders/uniformShaderConstants.h"
 #include "shaders/uniformRenderChunkConstants.h"
+
+#ifdef ADVANCED_PLANT_FILTER
+	uniform sampler2D TEXTURE_0; //Textures
+#endif
 
 attribute POS4 POSITION;
 attribute vec4 COLOR;
@@ -122,10 +130,54 @@ void main() {
 	// На прозрачных штуках
 	#ifdef ALPHA_TEST
 		#ifdef PLANT_WAVES
-			//if(color.g > color.b){ // Если они зеленые
-				POS3 l = POSITION.xyz;
-				pos.s += sin(TIME * PlantWavesSpeed + 3.0*l.x+l.y+l.z) * 0.05; // Применить искажение
-			//}
+			// if(color.g > color.b){ // Если они зеленые
+			#ifdef ADVANCED_PLANT_FILTER
+				/*vec4 texcolor = texture2D( TEXTURE_0, uv0 );
+				float r = texcolor.r,
+					  g = texcolor.g,
+					  b = texcolor.b;*/
+				//if(){ //Определение колыхающихся блоков на основе текстур
+				vec2 texcoord = vec2(uv0.x * 32.0, uv0.y * 16.0);
+   				float index = floor(texcoord.x) + floor(texcoord.y) * 32.0;
+				float power = 0.0;
+				if(index >= 151.0 && index <= 169.0){
+ 					power = 0.9;
+				}else if(index == 180.0 || index == 181.0){
+					power = 0.75;
+				}else if(index == 262.0 || index == 263.0){
+					power = 0.45;
+				}else if(index >= 64.0 && index <= 96.0 || index >= 133.0 && index < 137.0 || index >= 206.0 && index <= 213.0 || index >= 224.0 && index <= 226.0){
+					power = 1.0;
+					if(texcoord.y > floor(texcoord.y) + .1){
+						power = 0.0;
+					}
+					if(index >= 81.0 && index <= 90.0){
+						power++;
+					}
+				}else if(index >= 361.0 && index <= 362.0){
+					power = 0.9;
+					if(texcoord.y > floor(texcoord.y) + .1){
+						power = 0.0;
+					}
+				}else if(index == 175.0){
+					power = 0.3;
+				}else if(index == 206.0){
+					power = 0.5;
+				}
+				/*switch(index){
+					default:
+						float power = 0.05;
+						break;
+				}*/
+			#else
+				float power = 0.05;
+			#endif
+					POS3 l = POSITION.xyz;
+					pos.s += sin(TIME * PlantWavesSpeed + 3.0 * l.x + l.y + l.z) * power; // Применить искажение
+			#ifdef ADVANCED_PLANT_FILTER
+				//}
+			#endif
+			// }
 		#endif
 	#endif
 	///// apply fog
@@ -177,5 +229,15 @@ void main() {
 			color.a = pos.z / FAR_CHUNKS_DISTANCE + 0.5;
 		#endif //FANCY
 	#endif
+	
+	#ifdef TEST
+		#ifndef BYPASS_PIXEL_SHADER
+			//color.r = index;
+			//color.g = 0.0;
+			color.rg = uv0.xy;
+			color.b = 0.0;
+		#endif
+	#endif
+	
 	gl_Position = pos;
 }

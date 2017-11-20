@@ -14,6 +14,7 @@
 //#define SHADOWS //Статические тени из шадоумэпа
 //#define DYNAMIC_SHADOWS //Динамические тени
 //#define TORCH_PROCESSOR //Модификация факелов
+//#define VERTEX_ONLY
 
 #include "shaders/fragmentVersionCentroid.h"
 
@@ -290,6 +291,10 @@ void main(){
 		diffuse += (cnoise(fogPos) + 1.0) / 16.0;
 	#endif
 
+	#ifdef VERTEX_ONLY
+		diffuse = color;
+	#endif
+	
 	gl_FragColor = diffuse;
 
 	#endif // BYPASS_PIXEL_SHADER
