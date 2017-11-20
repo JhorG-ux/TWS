@@ -122,10 +122,10 @@ void main() {
 	// На прозрачных штуках
 	#ifdef ALPHA_TEST
 		#ifdef PLANT_WAVES
-			if(color.g > color.b){ // Если они зеленые
+			//if(color.g > color.b){ // Если они зеленые
 				POS3 l = POSITION.xyz;
 				pos.s += sin(TIME * PlantWavesSpeed + 3.0*l.x+l.y+l.z) * 0.05; // Применить искажение
-			}
+			//}
 		#endif
 	#endif
 	///// apply fog
@@ -137,12 +137,12 @@ void main() {
 		#endif
 		
 		#ifdef UNDER_WATER
-		if(FOG_CONTROL.x < 0.1 && FOG_CONTROL.y < 20.0){
-			float range = 0.035;// + cameraDepth / 1000.0;
-			vec3 waves = sin(POSITION.xyz * 10.0 + TIME * UnderWaterSpeed)  * cos(POSITION.y * 10.0 + TIME * UnderWaterSpeed) * range;  //Скорость: 6.0(или в конфиге)
-			pos.xyz += waves;
-			fogColor.a = 0.5; //0.8 //Мутность воды =)
-		}
+			if(FOG_CONTROL.x < 0.1 && FOG_CONTROL.y < 20.0){
+				float range = 0.035;// + cameraDepth / 1000.0;
+				vec3 waves = sin(POSITION.xyz * 1.0 + TIME * 1.0) * range;//  * cos(POSITION.y * 10.0 + TIME * UnderWaterSpeed) * range;  //Скорость: 6.0(или в конфиге)
+				pos.xyz += waves;
+				fogColor.a = 0.5; //0.8 //Мутность воды =)
+			}
 		#endif
 
 		fogColor.rgb = FOG_COLOR.rgb;
