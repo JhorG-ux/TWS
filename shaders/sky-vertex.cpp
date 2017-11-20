@@ -3,6 +3,7 @@
 
 //#define INVERT_RB
 #define GRAY_FILTER
+#define CUSTOM_NIGHT
 //#define TEST
 
 #include "shaders/vertexVersionSimple.h"
@@ -17,6 +18,8 @@ attribute vec4 COLOR;
 varying vec4 color;
 
 const float fogNear = 0.3;
+
+const vec3 NightLight = vec3(.1, 0.0,.5);
 
 float calc_weather_value(){
 	return 0.0;
@@ -33,9 +36,9 @@ void main()
 	#endif
 	
 	#ifdef CUSTOM_NIGHT
-		mixval.r = max(mixval.r, NIGHT_R);
-		mixval.g = max(mixval.g, NIGHT_G);
-		mixval.b = max(mixval.b, NIGHT_B);
+		mixval.r = max(mixval.r, NightLight.r);
+		mixval.g = max(mixval.g, NightLight.g);
+		mixval.b = max(mixval.b, NightLight.b);
 	#endif
 	
 	#ifdef GRAY_FILTER
