@@ -8,7 +8,7 @@
 //#define TORCH_BLINK //Дрожание света от факела
 
 //Тестирование
-//#define TEST_TEXTURE_MAPS // Классная графика. Вкл - лайтмэп Выкл - шадоумэп
+#define TEST_TEXTURE_MAPS // Классная графика. Вкл - лайтмэп Выкл - шадоумэп
 //#define TEST_UV
 //#define UsernameAKs_Lights
 //#define UsernameAKs_Water
@@ -16,6 +16,7 @@
 //#define DYNAMIC_SHADOWS //Динамические тени
 //#define TORCH_PROCESSOR //Модификация факелов
 //#define VERTEX_ONLY
+#define WATER_LIGHT_REFLECTION
 
 #include "shaders/fragmentVersionCentroid.h"
 
@@ -188,14 +189,32 @@ void main(){
 			discard;
 	#endif
 	
+	#ifdef TORCH_PROCESS
+		diffuse = TorchProcessor(diffuse, lights);
+	#endif
+	
+	
+	#ifdef UsernameAKs_Lights	
+		lights.rgb *= inColor.rgb*0.75;
+		lights.r *= 0.5;
+		lights.g *= 0.3;
+		lights.b *= 0.0;
+//		lights.rgb *= 1.5;
+		diffuse *= inColor*lights;
+	#endif
+	
+	#ifdef NEAR_WATER
+		#ifdef WATER_LIGHT_REFLECTION
+			//TODO: Синкремент, сюда пиши свой код
+			//Работай с lights
+		#endif
+	#endif
+	
+	
 	#if !defined(ALWAYS_LIT)
 		#ifndef NIGHT_VISION
 			diffuse = diffuse * lights; //Применяется освещение
 		#endif
-	#endif
-	
-	#ifdef TORCH_PROCESS
-		diffuse = TorchProcessor(diffuse, lights);
 	#endif
 		
 	#ifndef SEASONS
@@ -219,15 +238,6 @@ void main(){
 		diffuse.rgb *= mix(vec3(1.0,1.0,1.0), texture2D( TEXTURE_2, uv).rgb*2.0, inColor.b);
 		diffuse.rgb *= inColor.aaa;
 		diffuse.a = 1.0;
-	#endif
-
-	#ifdef UsernameAKs_Lights	
-		lights.rgb *= inColor.rgb*0.75;
-		lights.r *= 0.5;
-		lights.g *= 0.3;
-		lights.b *= 0.0;
-//		lights.rgb *= 1.5;
-		diffuse *= inColor*lights;
 	#endif
 
 	#ifdef SHADOWS
@@ -282,7 +292,7 @@ void main(){
 	
 	#ifdef TEST_TEXTURE_MAPS
 		#ifdef FANCY //Включена Классная графика в настройках
-			diffuse = texture2D( TEXTURE_1, uv1 ); //Light map
+			diffuse = lights;//texture2D( TEXTURE_1, uv1 ); //Light map
 		#else
 			diffuse = texture2D( TEXTURE_2, inColor.xy); //Shadow map
 		#endif
