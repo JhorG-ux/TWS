@@ -11,6 +11,7 @@
 //#define TEST_TEXTURE_MAPS // Классная графика. Вкл - лайтмэп Выкл - шадоумэп
 //#define TEST_UV
 //#define UsernameAKs_Lights
+//#define UsernameAKs_Water
 //#define SHADOWS //Статические тени из шадоумэпа
 //#define DYNAMIC_SHADOWS //Динамические тени
 //#define TORCH_PROCESSOR //Модификация факелов
@@ -288,7 +289,9 @@ void main(){
 	#endif
 
 	#ifdef NEAR_WATER
-		diffuse += (cnoise(fogPos) + 1.0) / 16.0;
+		#ifdef UsernameAKs_Water
+			diffuse += (cnoise(fogPos) + 1.0) / 16.0;
+		#endif
 	#endif
 
 	#ifdef VERTEX_ONLY
