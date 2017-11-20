@@ -117,6 +117,7 @@ void main(){
 	#endif
 	
 	#ifdef LIGHTS
+		#ifndef NEAR_WATER
 		if(lights.b > lights.r && lights.b > lights.g && lights.r < .5){ //Night
 		//FIXME: режет
 			/*lights.r *= 1.;
@@ -131,9 +132,11 @@ void main(){
 			lights.b *= .5;
 		}*/else{ //light sources
 			lights.r *= 1.;
-			lights.g *= .7;
-			lights.b *= .01;
+			lights.g *= .8;
+			lights.b *= .7;
+			lights.rgb *= 1.3;
 		}
+		#endif
 	#endif
 	
 	#ifdef NEAR_WATER
