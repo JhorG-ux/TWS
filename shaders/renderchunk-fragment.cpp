@@ -223,7 +223,7 @@ void main(){
 	#ifdef FOG_MODE
 		vec3 fog_color = mix(vec3(0.8, 0.9, 1.0) * (0.3 + .7 * 0.6), vec3(0.9, 0.6, 0.7), (1.0 - abs(0.5 - .7) * 2.0) * 0.7);
 		//float fog_distance = min(1.0, camDis / 24.0 - 0.2);
-		diffuse.rgb = mix(diffuse.rgb, fog_color, 0.3);//fog_color, fog_distance * max(0.5, fog_val));
+		diffuse.rgb = mix(diffuse.rgb, fog_color, fog_val);//fog_color, fog_distance * max(0.5, fog_val));
 	#endif
 	
 	#ifdef TEST_UV
@@ -236,7 +236,7 @@ void main(){
 		//diffuse = tmplightmap * pow(tmplightmap.r, 2.0);//texture2D( TEXTURE_0, uv0) * tmplightmap * vec4(tmplmmultipler,1.0);
 		//diffuse = lightmap * ( 1.0 / ( pow( 2.7182, -5.0 * lightmap.r ) + 1.0 ) );
 		//diffuse.rgb = vec3(lightmap.r);//lightmap * porog(lightmap.r, 0.9);
-		diffuse = inColor;
+		diffuse = vec4(fog_val);//inColor;
 	#endif
 	
 	#ifdef TEST_TEXTURE_MAPS
