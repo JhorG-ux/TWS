@@ -124,6 +124,7 @@ void main() {
 
 	fogPos = fogPos4.xyz / fogPos4.w;
 	fog_val = calc_fog(worldPos.xyz);
+	camDis = length(-worldPos.xz);
 
 	#ifndef BYPASS_PIXEL_SHADER
 		uv0 = TEXCOORD_0;
@@ -139,15 +140,13 @@ void main() {
 			float cameraDepth = length(relPos);
 			#ifdef NEAR_WATER
 				cameraDist = cameraDepth / FAR_CHUNKS_DISTANCE;
-			#endif	
-			camDis = length(relPos.xz);
+			#endif
 		#else
 			float cameraDepth = pos.z;
 			#ifdef NEAR_WATER
 				vec3 relPos = -worldPos.xyz;
 				float camDist = length(relPos);
 				cameraDist = camDist / FAR_CHUNKS_DISTANCE;
-				camDis = length(relPos.xz);
 			#endif
 		#endif
 	#endif
