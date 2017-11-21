@@ -1,6 +1,5 @@
 // __multiversion__
 // This signals the loading code to prepend either #version 100 or #version 300 es as apropriate.
-
 //On/Off
 #define UNDER_WATER
 #define WATER_WAVES
@@ -224,9 +223,14 @@ void main() {
 		
 		#ifdef UNDER_WATER
 			if(FOG_CONTROL.x < 0.1 && FOG_CONTROL.y < 20.0){
-				float range = 0.035;// + cameraDepth / 1000.0;
-				vec3 waves = sin(POSITION.xyz * 1.0 + TIME * 1.0) * range;//  * cos(POSITION.y * 10.0 + TIME * UnderWaterSpeed) * range;  //Скорость: 6.0(или в конфиге)
-				pos.xyz += waves;
+				float range = 0.035 + cameraDepth / 1000.0;
+				vec3 waves = fogPos.xyz * 15.0 + TIME * 1.0;//  * cos(POSITION.y * 10.0 + TIME * UnderWaterSpeed) * range;  //Скорость: 6.0(или в конфиге)
+				pos.xyz += sin(waves) * cos(waves) * range;
+				/*
+				pos.x *= abs(sin(TIME * 1.2)) * range;
+				pos.y *= abs(sin(TIME * 1.2)) * range;
+				pos.z *= abs(sin(TIME * 1.2)) * range;*/
+				//pos.s += (waves.x + waves.y + waves.z) * 0.5;
 				fogColor.a = 0.5; //0.8 //Мутность воды =)
 			}
 		#endif
@@ -257,7 +261,7 @@ void main() {
 			vec4 surfColor = vec4(color.rgb, 1.0);
 			
 			// Волны на воде
-			pos.y += sin(TIME * WaterWavesSpeed + 3.0*fogPos.x+fogPos.y+fogPos.z) * 0.05;
+			pos.y += sin(TIME * WaterWavesSpeed + 3.0 * fogPos.x + fogPos.y + fogPos.z) * 0.05;
 
 			vec4 nearColor = mix(traspColor, depthColor, color.a);
 			color = mix(surfColor, nearColor, F);

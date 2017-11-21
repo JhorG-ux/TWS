@@ -227,7 +227,9 @@ void main(){
 	#endif
 	
 	#ifdef TEST
-		diffuse = vec4(camDis);
+		#ifdef NEAR_WATER
+			diffuse = texture2D( TEXTURE_0, uv0 - 128.); //Меняем текстуру воды, что бы было лучше (на самом деле хуже) видно
+		#endif
 	#endif
 	
 	#ifdef TEST_TEXTURE_MAPS
