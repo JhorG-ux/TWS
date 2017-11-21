@@ -3,22 +3,22 @@
 
 
 //Конфигурация
+#define LIGHTS //Освещение TWS
+#define FOG_MODE //Туман TWS
 //#define NIGHT_VISION //Ночное зрение
-//#define COLOR_FILTER //Цветовой фильтр
-//#define TORCH_BLINK //Дрожание света от факела
 
 //Тестирование
 //#define TEST_TEXTURE_MAPS // Классная графика. Вкл - лайтмэп Выкл - шадоумэп
-//#define TEST_UV
-//#define UsernameAKs_Lights
-//#define UsernameAKs_Water
+//#define TEST //Для тестирования
+//#define UsernameAKs_Lights //Оранжевое освещение от Синкремента
+//#define UsernameAKs_Water //Вода от Синкремента
+//#define COLOR_FILTER //Цветовой фильтр
+//#define TORCH_BLINK //Дрожание света от факела
 //#define SHADOWS //Статические тени из шадоумэпа
 //#define DYNAMIC_SHADOWS //Динамические тени
 //#define TORCH_PROCESSOR //Модификация факелов
-//#define VERTEX_ONLY
-#define WATER_LIGHT_REFLECTION
-#define LIGHTS
-#define FOG_MODE
+//#define VERTEX_ONLY //Пропустить фрагментальный шейдер
+#define WATER_LIGHT_REFLECTION //Отражение света в воде
 
 #include "shaders/fragmentVersionCentroid.h"
 
@@ -44,7 +44,6 @@ varying vec4 color;
 varying vec3 fogPos;
 
 #ifdef FOG_MODE
-	//FIXME: Не работает! Не передаётся!
 	varying float fog_val; //Количество тумана
 	varying float camDis; //Дистанция тумана
 #endif
@@ -227,17 +226,8 @@ void main(){
 		diffuse.rgb = mix(diffuse.rgb, fog_color, fog_distance * max(0.5, fog_val));
 	#endif
 	
-	#ifdef TEST_UV
-/*		diffuse.r = uv1.x;
-		diffuse.b = uv1.y;
-		diffuse.g = 0.0;
-		diffuse.a = 1.0;*/
-		//vec4 lightmap = texture2D( TEXTURE_1, uv1);
-		//float tmplmmultipler = pow(tmplightmap.r, 2)
-		//diffuse = tmplightmap * pow(tmplightmap.r, 2.0);//texture2D( TEXTURE_0, uv0) * tmplightmap * vec4(tmplmmultipler,1.0);
-		//diffuse = lightmap * ( 1.0 / ( pow( 2.7182, -5.0 * lightmap.r ) + 1.0 ) );
-		//diffuse.rgb = vec3(lightmap.r);//lightmap * porog(lightmap.r, 0.9);
-		diffuse = vec4(camDis);//inColor;
+	#ifdef TEST
+		diffuse = vec4(camDis);
 	#endif
 	
 	#ifdef TEST_TEXTURE_MAPS

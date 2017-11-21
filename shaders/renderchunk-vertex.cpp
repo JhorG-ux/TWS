@@ -5,6 +5,7 @@
 #define UNDER_WATER
 #define WATER_WAVES
 #define PLANT_WAVES
+#define FOG_MODE
 //#define ADVANCED_PLANT_FILTER
 
 //Тестирование
@@ -40,8 +41,11 @@
 #endif
 
 varying vec3 fogPos;
-varying float fog_val;
-varying float camDis;
+
+#ifdef FOG_MODE
+	varying float fog_val;
+	varying float camDis;
+#endif
 
 #include "shaders/uniformWorldConstants.h"
 #include "shaders/uniformPerFrameConstants.h"
@@ -123,8 +127,11 @@ void main() {
 	#endif
 
 	fogPos = fogPos4.xyz / fogPos4.w;
-	fog_val = calc_fog(worldPos.xyz);
-	camDis = length(-worldPos.xz);
+	
+	#ifdef FOG_MODE
+		fog_val = calc_fog(worldPos.xyz);
+		camDis = length(-worldPos.xz);
+	#endif
 
 	#ifndef BYPASS_PIXEL_SHADER
 		uv0 = TEXCOORD_0;
@@ -226,9 +233,11 @@ void main() {
 
 		fogColor.rgb = FOG_COLOR.rgb;
 		fogColor.a = clamp((len - FOG_CONTROL.x) / (FOG_CONTROL.y - FOG_CONTROL.x), 0.0, 1.0);
-		if(worldPos.y < 64.0){
-			fog_val = 0.0;
-		}
+		#ifdef FOG_MODE
+			if(worldPos.y < 64.0){
+				fog_val = 0.0;
+			}
+		#endif
 	#endif
 
 	///// water magic
