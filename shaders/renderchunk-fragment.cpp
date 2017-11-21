@@ -9,7 +9,7 @@
 
 //Тестирование
 //#define TEST_TEXTURE_MAPS // Классная графика. Вкл - лайтмэп Выкл - шадоумэп
-//#define TEST //Для тестирования
+#define TEST //Для тестирования
 //#define UsernameAKs_Lights //Оранжевое освещение от Синкремента
 //#define UsernameAKs_Water //Вода от Синкремента
 //#define COLOR_FILTER //Цветовой фильтр
@@ -24,7 +24,7 @@
 
 #if __VERSION__ >= 300
 	#ifndef BYPASS_PIXEL_SHADER
-		#if defined(TEXEL_AA) && defined(TEXEL_AA_FEATURE)
+		#if defined(TEXEL_AA) && defined(TEXEL_AA_FEATURE) //антиалясинг
 			_centroid in highp vec2 uv0;
 			_centroid in highp vec2 uv1;
 		#else
@@ -47,6 +47,9 @@ varying vec3 fogPos;
 	varying float fog_val; //Количество тумана
 	varying float camDis; //Дистанция тумана
 #endif
+
+varying vec3 wPos;
+varying vec3 wvPos;
 
 #ifdef FOG
 	varying vec4 fogColor;
@@ -75,18 +78,46 @@ float porog(float x, float point){
 	}
 }
 
+
+// =========== PLAYER SHADOW ============
+//from KMPE
+float inrect(vec2 pos, float x1, float y1, float x2, float y2, float focus){
+	return min(1.0, max(min(min(pos.x - x1, x2 - pos.x), min(pos.y - y1, y2 - pos.y)), 0.0) / focus);
+}
+
+float playershadow(vec3 look, vec3 position){
+	vec3 pos = look.zyx + vec3(0.0, 0.2, 0.0); 
+	vec3 dir = vec3(-1.0, (1.25 + sin(TIME * 0.01) * 0.3) * 0.31, 0.0);
+	float factor = 1.0;
+	if (pos.x < 0.2){
+		factor = max(0.0, pos.x / 0.4 + 0.5);
+	}
+	pos += dir * pos.x;
+	float focus = .15;
+	float walk = sin((position.x - look.x) * 2.0 + (position.z - look.z) * 2.0) * .5;
+	float body = max(inrect(pos.yz, -1.5 + walk * .1, -0.25, 0.75, .1, focus), inrect(pos.yz, -1.5 - walk * .1, -.1, 0.75, 0.25, focus));
+	float hands = max(inrect(pos.yz, -0.5 + walk * .1, -0.5, 0.25, .1, focus), inrect(pos.yz, -0.5 - walk * .1, -.1, 0.25, 0.5, focus));
+	return min(1.0, max(body, hands)) * factor;
+}
+
 void main(){
 	//Заглушка
 	#ifdef BYPASS_PIXEL_SHADER
 		gl_FragColor = vec4(0, 0, 0, 0);
 		return;
 	#else 
+	
+	#ifdef PLAYER_SHADOW
+		float pshadow = playershadow(wPos, wvPos) * .2;
+	#else
+		float pshadow = 0.0;
+	#endif
 
 	vec4 diffuse;
-	vec4 lights = texture2D( TEXTURE_1, uv1 );
+	vec4 lights = texture2D( TEXTURE_1, vec2(uv1.x, uv1.y - pshadow) );
 
 	#if !defined(TEXEL_AA) || !defined(TEXEL_AA_FEATURE)
-		diffuse = texture2D( TEXTURE_0, uv0 );
+		diffuse = texture2D( TEXTURE_0, uv0 ); //Антиалясинг
 	#else
 		diffuse = texture2D_AA(TEXTURE_0, uv0 );
 	#endif
@@ -227,9 +258,7 @@ void main(){
 	#endif
 	
 	#ifdef TEST
-		#ifdef NEAR_WATER
-			diffuse = texture2D( TEXTURE_0, uv0 - 128.); //Меняем текстуру воды, что бы было лучше (на самом деле хуже) видно
-		#endif
+			diffuse = texture2D( TEXTURE_0, uv0 / 32.0); //Меняем текстуру воды, что бы было лучше (на самом деле хуже) видно
 	#endif
 	
 	#ifdef TEST_TEXTURE_MAPS

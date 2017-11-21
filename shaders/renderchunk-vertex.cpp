@@ -46,6 +46,9 @@ varying vec3 fogPos;
 	varying float camDis;
 #endif
 
+varying vec3 wPos; //World position
+varying vec3 wvPos; //World position + view
+
 #include "shaders/uniformWorldConstants.h"
 #include "shaders/uniformPerFrameConstants.h"
 #include "shaders/uniformShaderConstants.h"
@@ -131,6 +134,9 @@ void main() {
 		fog_val = calc_fog(worldPos.xyz);
 		camDis = length(-worldPos.xz);
 	#endif
+	
+	wvPos = worldPos.xyz + VIEW_POS.xyz;
+	wPos = worldPos.xyz;
 
 	#ifndef BYPASS_PIXEL_SHADER
 		uv0 = TEXCOORD_0;
