@@ -18,6 +18,7 @@
 //#define VERTEX_ONLY
 #define WATER_LIGHT_REFLECTION
 #define LIGHTS
+#define FOG_MODE
 
 #include "shaders/fragmentVersionCentroid.h"
 
@@ -41,6 +42,12 @@
 varying vec4 color;
 
 varying vec3 fogPos;
+
+#ifdef FOG_MODE
+	//FIXME: Не работает! Не передаётся!
+	varying float fog_val; //Количество тумана
+	varying float camDis; //Дистанция тумана
+#endif
 
 #ifdef FOG
 	varying vec4 fogColor;
@@ -211,6 +218,12 @@ void main(){
 	
 	#ifdef FOG
 		diffuse.rgb = mix( diffuse.rgb, fogColor.rgb, fogColor.a );
+	#endif
+	
+	#ifdef FOG_MODE
+		vec3 fog_color = mix(vec3(0.8, 0.9, 1.0) * (0.3 + .7 * 0.6), vec3(0.9, 0.6, 0.7), (1.0 - abs(0.5 - .7) * 2.0) * 0.7);
+		//float fog_distance = min(1.0, camDis / 24.0 - 0.2);
+		diffuse.rgb = mix(diffuse.rgb, fog_color, 0.3);//fog_color, fog_distance * max(0.5, fog_val));
 	#endif
 	
 	#ifdef TEST_UV

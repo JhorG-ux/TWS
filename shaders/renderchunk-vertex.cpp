@@ -40,6 +40,8 @@
 #endif
 
 varying vec3 fogPos;
+varying float fog_val;
+varying float camDis;
 
 #include "shaders/uniformWorldConstants.h"
 #include "shaders/uniformPerFrameConstants.h"
@@ -70,7 +72,7 @@ bool isNether(vec4 fog){
 	}
 }
 
-//random
+//math
 /*
 float rnd(float x, float z, float seed){
 	float v = mod(x * 1372.0 + z * 1227.0 + seed * 1293.0, 10000.0);
@@ -89,7 +91,19 @@ float noisegen(float x){
 	return fract(sin(x)*0.8+0.5);
 }
 */
+
+
+//calcs
+
+float calc_fog(vec3 xyz){
+	float xzfog = (sin((xyz.x + TIME) * 0.05) + sin((xyz.z + TIME) * 0.1) + 2.0) / 4.0;
+	float ymp = 1.0 - min(1.0, abs(64.0 - xyz.y) / 192.0);
+	float tmp = max(0.0, min(1.0, max(0.0, (sin(TIME * 0.008) - 0.5) * 4.0)));
+	return max(0.01, min(1.0, xzfog * ymp * tmp * 1.5));
+}
+
 void main() {
+	//float fog_val, camDis;
 	POS4 worldPos;
 	#ifdef AS_ENTITY_RENDERER
 		vec4 fogPos4 = WORLD * POSITION;
@@ -109,6 +123,7 @@ void main() {
 	#endif
 
 	fogPos = fogPos4.xyz / fogPos4.w;
+	fog_val = calc_fog(worldPos.xyz);
 
 	#ifndef BYPASS_PIXEL_SHADER
 		uv0 = TEXCOORD_0;
@@ -124,13 +139,15 @@ void main() {
 			float cameraDepth = length(relPos);
 			#ifdef NEAR_WATER
 				cameraDist = cameraDepth / FAR_CHUNKS_DISTANCE;
-			#endif
+			#endif	
+			camDis = length(relPos.xz);
 		#else
 			float cameraDepth = pos.z;
 			#ifdef NEAR_WATER
 				vec3 relPos = -worldPos.xyz;
 				float camDist = length(relPos);
 				cameraDist = camDist / FAR_CHUNKS_DISTANCE;
+				camDis = length(relPos.xz);
 			#endif
 		#endif
 	#endif
@@ -210,6 +227,9 @@ void main() {
 
 		fogColor.rgb = FOG_COLOR.rgb;
 		fogColor.a = clamp((len - FOG_CONTROL.x) / (FOG_CONTROL.y - FOG_CONTROL.x), 0.0, 1.0);
+		if(worldPos.y < 64.0){
+			fog_val = 0.0;
+		}
 	#endif
 
 	///// water magic
