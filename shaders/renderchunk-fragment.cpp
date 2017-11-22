@@ -11,7 +11,7 @@
 #define TEST_TEXTURE_MAPS // Классная графика. Вкл - лайтмэп Выкл - шадоумэп
 //#define TEST //Для тестирования
 //#define UsernameAKs_Lights //Оранжевое освещение от Синкремента
-//#define UsernameAKs_Water //Вода от Синкремента
+#define UsernameAKs_Water //Вода от Синкремента
 //#define COLOR_FILTER //Цветовой фильтр
 //#define TORCH_BLINK //Дрожание света от факела
 //#define SHADOWS //Статические тени из шадоумэпа
@@ -65,7 +65,8 @@ varying vec3 wvPos;
 
 uniform sampler2D TEXTURE_0; //Textures
 uniform sampler2D TEXTURE_1; //Lightmap
-uniform sampler2D TEXTURE_2; //Shadowmap
+uniform sampler2D TEXTURE_2; //Colormap
+uniform sampler2D TEXTURE_3; //Perlin
 
 float sigmoid(float x){
 	return 1.0 / ( pow(2.7182, -5.0 * x) + 1.0);
@@ -277,6 +278,7 @@ void main(){
 	#ifdef NEAR_WATER
 		#ifdef UsernameAKs_Water
 			//diffuse += (cnoise(fogPos) + 1.0) / 16.0;
+			diffuse += texture2D(TEXTURE_3, fract(fogPos.xz / 16.0)).r / 8.0;
 		#endif
 	#endif
 
@@ -285,6 +287,7 @@ void main(){
 	#endif
 	
 	gl_FragColor = diffuse;
+	//gl_FragColor = vec4(uv0 / 32.0, 0.0, 1.0); 
 
 	#endif // BYPASS_PIXEL_SHADER
 }
