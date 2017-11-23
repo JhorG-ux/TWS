@@ -5,6 +5,7 @@
 #define WATER_WAVES
 #define PLANT_WAVES
 #define FOG_MODE
+#define PLAYER_SHADOW
 //#define ADVANCED_PLANT_FILTER
 
 //Тестирование
@@ -46,8 +47,9 @@ varying vec3 fogPos;
 	varying float camDis;
 #endif
 
-varying vec3 wPos; //World position
-varying vec3 wvPos; //World position + view
+#ifdef PLAYER_SHADOW
+	varying float player_shadow;
+#endif
 
 #include "shaders/uniformWorldConstants.h"
 #include "shaders/uniformPerFrameConstants.h"
@@ -97,6 +99,10 @@ float noisegen(float x){
 	return fract(sin(x)*0.8+0.5);
 }
 */
+float inrect(vec2 pos, float x1, float y1, float x2, float y2, float focus){
+	return min(1.0, max(min(min(pos.x - x1, x2 - pos.x), min(pos.y - y1, y2 - pos.y)), 0.0) / focus);
+}
+
 
 
 //calcs
@@ -106,6 +112,24 @@ float calc_fog(vec3 xyz){
 	float ymp = 1.0 - min(1.0, abs(64.0 - xyz.y) / 192.0);
 	float tmp = max(0.0, min(1.0, max(0.0, (sin(TIME * 0.008) - 0.5) * 4.0)));
 	return max(0.01, min(1.0, xzfog * ymp * tmp * 1.5));
+}
+
+float calc_player_shadow(vec3 position){
+	vec3 pos = position.zyx + vec3(0.0, 0.2, 0.0); 
+	//vec3 dir = vec3(-1.0, (1.25 + sin(TIME * 0.01) * 0.3) * 0.31, 0.0);
+	float factor = 1.0;
+	if (pos.x < 0.2){
+		factor = max(0.0, pos.x / 0.4 + 0.5);
+	}
+	//pos += dir * pos.x;
+	float focus = 0.15;
+	float walk = 0.0;//sin(TIME) * 0.5;//VIEW_POS.x * 2.0 + VIEW_POS.z * 2.0) * 0.5;
+	//float body = max(inrect(pos.yz, -1.5 + walk * 0.1, -0.25, 0.75, 0.1, focus), inrect(pos.yz, -1.5 - walk * 0.1, -0.1, 0.75, 0.25, focus));
+	//float hands = max(inrect(pos.yz, -0.5 + walk * 0.1, -0.5, 0.25, 0.1, focus), inrect(pos.yz, -0.5 - walk * 0.1, -0.1, 0.25, 0.5, focus));
+	//return min(1.0, max(body, hands)) * factor;
+	float body = max(inrect(pos.yz, -1.5 + walk * 0.1, -0.25, 0.75, 0.1, focus), inrect(pos.yz, -1.5 - walk * 0.1, -0.1, 0.75, 0.25, focus));
+	float hands = max(inrect(pos.yz, -0.5 + walk * 0.1, -0.5, 0.25, 0.1, focus), inrect(pos.yz, -0.5 - walk * 0.1, -0.1, 0.25, 0.5, focus));
+	return min(1.0, max(body, hands)) * factor;
 }
 
 void main() {
@@ -135,8 +159,11 @@ void main() {
 		camDis = length(-worldPos.xz);
 	#endif
 	
-	wvPos = worldPos.xyz + VIEW_POS.xyz;
-	wPos = worldPos.xyz;
+	//wvPos = worldPos.xyz + VIEW_POS.xyz;
+	//wPos = worldPos.xyz;
+	#ifdef PLAYER_SHADOW
+		player_shadow = calc_player_shadow(worldPos.xyz);
+	#endif
 
 	#ifndef BYPASS_PIXEL_SHADER
 		uv0 = TEXCOORD_0;
@@ -230,7 +257,7 @@ void main() {
 		#ifdef UNDER_WATER
 			if(FOG_CONTROL.x < 0.1 && FOG_CONTROL.y < 20.0){
 				float range = 0.035 + cameraDepth / 1000.0;
-				vec3 waves = fogPos.xyz * 15.0 + TIME * 1.0;//  * cos(POSITION.y * 10.0 + TIME * UnderWaterSpeed) * range;  //Скорость: 6.0(или в конфиге)
+				vec3 waves = fogPos.xyz * 15.0 + TIME * UnderWaterSpeed;//  * cos(POSITION.y * 10.0 + TIME * UnderWaterSpeed) * range;  //Скорость: 6.0(или в конфиге)
 				pos.xyz += sin(waves) * cos(waves) * range;
 				/*
 				pos.x *= abs(sin(TIME * 1.2)) * range;
