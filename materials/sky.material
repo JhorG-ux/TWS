@@ -11,7 +11,7 @@
 
 		"vertexShader" : "shaders/uv.vertex",
 		"vrGeometryShader": "shaders/uv.geometry",
-		"fragmentShader" : "shaders/texture_ccolor.fragment",
+		"fragmentShader" : "shaders/luminaries-fragment.cpp",
     "vertexFields": [
       { "field": "Position" },
       { "field": "UV0" }
