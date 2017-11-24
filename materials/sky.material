@@ -146,7 +146,7 @@
 
     "vertexShader" : "shaders/uv_repeat.vertex" ,
     "vrGeometryShader": "shaders/uv.geometry",
-    "fragmentShader" : "shaders/texture_ccolor.fragment",
+    "fragmentShader" : "shaders/sky-end-fragment.cpp",
 
     "vertexFields": [
       { "field": "Position" },
