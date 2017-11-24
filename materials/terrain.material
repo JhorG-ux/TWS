@@ -7,6 +7,14 @@
     "defines": [ "LOW_PRECISION", "TEXEL_AA", "ATLAS_TEXTURE" ],
     "states": [ "DisableAlphaWrite" ],
 
+    "textures": [
+      {
+        "textureIndex": 4,
+        "textureLocation": "InUserPackage",
+        "textureName": "textures/environment/voronoi"
+      }
+    ],
+
     "samplerStates": [
       {
         "samplerIndex": 0,
@@ -14,6 +22,10 @@
       },
       {
         "samplerIndex": 1,
+        "textureFilter": "Bilinear"
+      },
+      {
+        "samplerIndex": 4,
         "textureFilter": "Bilinear"
       }
     ],

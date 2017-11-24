@@ -112,6 +112,27 @@
   },
 
   "skyplane": {
+    "states": [
+      "Blending"
+    ],
+
+    "samplerStates": [
+      {
+        "samplerIndex": 0,
+        "textureFilter": "Bilinear"
+      },
+    ],
+    
+    "textures": [
+      {
+        "textureIndex": 0,
+        "textureLocation": "InUserPackage",
+        "textureName": "textures/environment/clouds_realistic"
+      }
+    ],
+
+    "blendSrc": "SourceAlpha",
+    "blendDst": "One",
     "states": [ "DisableDepthWrite", "DisableAlphaWrite" ],
 
 		"vertexShader" : "shaders/sky-vertex.cpp",
