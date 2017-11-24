@@ -21,6 +21,8 @@
 #define WATER_LIGHT_REFLECTION //Отражение света в воде
 #define PLAYER_SHADOW
 
+//const vec3 hellfog = vec3(1.0, 0.6, 0.0);
+
 #include "shaders/fragmentVersionCentroid.h"
 
 #if __VERSION__ >= 300
@@ -82,6 +84,15 @@ float porog(float x, float point){
 	}
 }
 
+//detectors
+bool isNether(vec4 fog){
+	if(fog.r < .5 && fog.b < .2 && fog.r > fog.b){ //TODO: to inline return 
+		return true;
+	}else{
+		return false;
+	}
+}
+
 void main(){
 	//Заглушка
 	#ifdef BYPASS_PIXEL_SHADER
@@ -91,10 +102,11 @@ void main(){
 
 	vec4 diffuse;
 	vec2 _tmp = uv1;
-	#ifdef PLAYER_SHADOW
-		_tmp.y -= player_shadow;
-	#endif
 	vec4 lights = texture2D( TEXTURE_1, _tmp );//vec2(uv1.x, uv1.y - pshadow) );
+	#ifdef PLAYER_SHADOW
+		//_tmp.y -= player_shadow;	
+		lights -= vec4(player_shadow);
+	#endif
 
 	#if !defined(TEXEL_AA) || !defined(TEXEL_AA_FEATURE)
 		diffuse = texture2D( TEXTURE_0, uv0 ); //Антиалясинг
@@ -232,7 +244,16 @@ void main(){
 	
 	#ifdef FOG_MODE
 		//TODO: .7 заменить на переменную времени дня
-		vec3 fog_color = mix(vec3(0.8, 0.9, 1.0) * (0.3 + .7 * 0.6), vec3(0.9, 0.6, 0.7), (1.0 - abs(0.5 - .7) * 2.0) * 0.7);
+		vec3 fog_color;
+		#ifdef FOG
+		if(isNether(fogColor)){
+			fog_color = vec3(1.0, 0.6, 0.0);;
+		}else{
+			fog_color = mix(vec3(0.8, 0.9, 1.0) * (0.3 + .7 * 0.6), vec3(0.9, 0.6, 0.7), (1.0 - abs(0.5 - .7) * 2.0) * 0.7);
+		}
+		#else
+			fog_color = mix(vec3(0.8, 0.9, 1.0) * (0.3 + .7 * 0.6), vec3(0.9, 0.6, 0.7), (1.0 - abs(0.5 - .7) * 2.0) * 0.7);
+		#endif
 		float fog_distance = min(1.0, camDis / 24.0 - 0.2);
 		diffuse.rgb = mix(diffuse.rgb, fog_color, fog_distance * max(0.5, fog_val));
 	#endif
