@@ -20,6 +20,7 @@
 //#define VERTEX_ONLY //Пропустить фрагментальный шейдер
 #define WATER_LIGHT_REFLECTION //Отражение света в воде
 #define PLAYER_SHADOW
+#define WATERBLICKS
 
 //const vec3 hellfog = vec3(1.0, 0.6, 0.0);
 
@@ -71,6 +72,8 @@ uniform sampler2D TEXTURE_0; //Textures
 uniform sampler2D TEXTURE_1; //Lightmap
 uniform sampler2D TEXTURE_2; //Colormap
 uniform sampler2D TEXTURE_3; //Perlin
+uniform sampler2D TEXTURE_4; //Voronoi
+
 
 float sigmoid(float x){
 	return 1.0 / ( pow(2.7182, -5.0 * x) + 1.0);
@@ -239,6 +242,11 @@ void main(){
 	#endif
 	
 	#ifdef FOG
+		#ifdef UNDER_WATER
+			#ifdef WATERBLICKS
+				diffuse *= texture2D(TEXTURE_4, fract(fogPos.xz / 16.0)).r / 8.0;//inColor.xy
+			#endif		
+		#endif
 		diffuse.rgb = mix( diffuse.rgb, fogColor.rgb, fogColor.a );
 	#endif
 	
@@ -258,8 +266,17 @@ void main(){
 		diffuse.rgb = mix(diffuse.rgb, fog_color, fog_distance * max(0.5, fog_val));
 	#endif
 	
+	
+	#ifdef NEAR_WATER
+		#ifdef UsernameAKs_Water
+			//diffuse += (cnoise(fogPos) + 1.0) / 16.0;
+			diffuse += texture2D(TEXTURE_3, fract(fogPos.xz / 16.0)).r / 8.0;
+		#endif
+	#endif
+	
 	#ifdef TEST
-		diffuse = texture2D( TEXTURE_0, uv0 / 32.0); //Меняем текстуру воды, что бы было лучше (на самом деле хуже) видно
+		diffuse.rg = uv0 / 32.0; //Меняем текстуру воды, что бы было лучше (на самом деле хуже) видно
+		diffuse.b = 0.0;
 	#endif
 	
 	#ifdef TEST_TEXTURE_MAPS
@@ -267,13 +284,6 @@ void main(){
 			diffuse = lights;//texture2D( TEXTURE_1, uv1 ); //Light map
 		#else
 			diffuse = texture2D( TEXTURE_2, inColor.xy); //Shadow map
-		#endif
-	#endif
-
-	#ifdef NEAR_WATER
-		#ifdef UsernameAKs_Water
-			//diffuse += (cnoise(fogPos) + 1.0) / 16.0;
-			diffuse += texture2D(TEXTURE_3, fract(fogPos.xz / 16.0)).r / 8.0;
 		#endif
 	#endif
 
