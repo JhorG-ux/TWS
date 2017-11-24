@@ -17,6 +17,8 @@ attribute vec4 COLOR;
 
 varying vec4 color;
 
+varying vec4 fragCoord;
+
 const float fogNear = 0.3;
 
 const vec3 NightLight = vec3(.1, 0.0,.5);
@@ -27,7 +29,8 @@ float calc_weather_value(){
 
 void main()
 {
-    gl_Position = WORLDVIEWPROJ * POSITION;
+
+	gl_Position = fragCoord = WORLDVIEWPROJ * POSITION;
 	vec4 mixval = CURRENT_COLOR;
 	
 	#ifdef INVERT_RB

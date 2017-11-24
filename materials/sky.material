@@ -137,7 +137,7 @@
 
 		"vertexShader" : "shaders/sky-vertex.cpp",
 		"vrGeometryShader" : "shaders/sky.geometry",
-		"fragmentShader" : "shaders/color.fragment",
+		"fragmentShader" : "shaders/sky-fragment.cpp",
     "vertexFields": [
       { "field": "Position" },
       { "field": "Color" }
