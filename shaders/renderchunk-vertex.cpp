@@ -238,12 +238,10 @@ void main() {
 			#else
 				float power = 0.05;
 			#endif
+				#ifdef FANCY
 					POS3 l = POSITION.xyz;
 					pos.s += sin(TIME * PlantWavesSpeed + 3.0 * l.x + l.y + l.z) * power; // Применить искажение
-			#ifdef ADVANCED_PLANT_FILTER
-				//}
-			#endif
-			// }
+				#endif
 		#endif
 	#endif
 	///// apply fog
