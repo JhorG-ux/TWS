@@ -1,0 +1,14 @@
+entity.fragment{
+Глаза
+}
+renderchunk.fragment{
+lightf
+Тени
+Конфиг
+}
+renderchunk.vertex{
+Тошнота
+Волны
+
+Конфиг
+}

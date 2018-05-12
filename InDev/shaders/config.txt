@@ -1,0 +1,54 @@
+vertex:
+ 
+ 	//Конфигурация TeamWorldShaders
+	
+	bool underwater = true; //Включить эффект тошноты под водой
+	
+	float underspeed = 6.0;  //Скорость тошноты под водой
+
+	float treespeed = 2.0; //Скорость движения листвы
+	
+	float grassspeed = 2.5; //Скорость движения травы
+	
+	float firespeed = 8.5; //Скорость движения огня
+	
+	bool enablewavs = false; //Включить волны
+	
+	float wavshight = 1.0; //Высота волн
+	
+	float wavswidth = 2.5; //Длина волн
+	
+	float wavsspeed = 7.0; //Скорость волн
+	
+	bool netherwave = false //Включить движение адского нароста
+	
+	float netherspeed = 2.0; //Скорость движения адского нароста
+
+	//Конец конфигурации
+	
+fragment:
+		//Конфигурация TeamWorldShaders
+	
+	bool shadows = false; //Включить динамические тени
+
+	vec4 shadowcolor = vec4(0.0, 0.0, 0.0, 1.0);  //Цвет теней (красный, зеленый, синий, прозрачность)
+	
+	bool fogmod = true; //Включить модификацию тумана
+	
+	float fogcount = 2.0f; //Плотность тумана
+	
+	vec3 mfogcolor = vec3(1.0, 1.0, 1.0); //Цвет тумана (красный, зеленый, синий)
+	
+	bool underfog = false; //Включить мутность воды
+	
+	vec3 undercolor = vec3(0.0, 0.3, 0.5); //Цвет (тумана) под водой
+	
+	vec3 daylight = vec3(1.5, 1.0, 1.0); //Цвет дневного света
+	
+	vec3 nightlight = vec3(0.2, 0.2, 0.5); //Цвет ночного света
+	
+	vec3 netherwave = fals //Цвет освещения (факела, лампы и т.п.)
+	
+	bool waterblic = false; //Включить блики на воде
+
+	//Конец конфигурации
